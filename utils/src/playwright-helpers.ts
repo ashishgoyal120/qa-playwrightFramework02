@@ -14,11 +14,11 @@ export function getCredentialsForApp(): { email: string; password: string; } {
 }
 
 export async function waitForSuccessFulResponse(page: Page): Promise<Response> {
-    return new Promise((resolve, reject) => {
+    return await new Promise((resolve, reject) => {
         const timeout = setTimeout(() => reject(new Error("Timeout waiting for dashboard response")), 15000);
 
         page.on('response', async (res) => {
-            if (res.url().endsWith('/dashboard/index') && res.status() === 200) { // need to write detail explanation of this line
+            if (res.url().endsWith('/dashboard/index') && res.status() === 200) {
                 resolve(res);
             }
         });

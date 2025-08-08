@@ -11,7 +11,7 @@
     "grepInvert": null,
     "maxFailures": 0,
     "metadata": {
-      "actualWorkers": 1
+      "actualWorkers": 2
     },
     "preserveOutput": "always",
     "reporter": [
@@ -40,7 +40,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "setup",
         "name": "setup",
@@ -56,7 +56,7 @@
         "repeatEach": 1,
         "retries": 0,
         "metadata": {
-          "actualWorkers": 1
+          "actualWorkers": 2
         },
         "id": "chromium",
         "name": "chromium",
@@ -98,12 +98,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 7151,
+                  "duration": 11844,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-08-08T12:27:53.279Z",
+                  "startTime": "2025-08-08T14:19:07.071Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -115,6 +115,68 @@
           "file": "../utils/src/auth.setup.ts",
           "line": 10,
           "column": 6
+        }
+      ]
+    },
+    {
+      "title": "dashboard/dashboard.spec.ts",
+      "file": "dashboard/dashboard.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [
+        {
+          "title": "AN-001 verify",
+          "ok": true,
+          "tags": [],
+          "tests": [
+            {
+              "timeout": 60000,
+              "annotations": [
+                {
+                  "type": "Test case Id :",
+                  "description": "JIRA URL of Testcase"
+                }
+              ],
+              "expectedStatus": "passed",
+              "projectId": "chromium",
+              "projectName": "chromium",
+              "results": [
+                {
+                  "workerIndex": 1,
+                  "parallelIndex": 0,
+                  "status": "passed",
+                  "duration": 20495,
+                  "errors": [],
+                  "stdout": [
+                    {
+                      "text": "verified title\n"
+                    }
+                  ],
+                  "stderr": [],
+                  "retry": 0,
+                  "steps": [
+                    {
+                      "title": "Verify title",
+                      "duration": 2
+                    }
+                  ],
+                  "startTime": "2025-08-08T14:19:20.314Z",
+                  "annotations": [
+                    {
+                      "type": "Test case Id :",
+                      "description": "JIRA URL of Testcase"
+                    }
+                  ],
+                  "attachments": []
+                }
+              ],
+              "status": "expected"
+            }
+          ],
+          "id": "747340cde928aa6c3216-08dd6c80fb22db2c9774",
+          "file": "dashboard/dashboard.spec.ts",
+          "line": 7,
+          "column": 5
         }
       ]
     },
@@ -137,10 +199,10 @@
               "projectName": "chromium",
               "results": [
                 {
-                  "workerIndex": 1,
-                  "parallelIndex": 0,
+                  "workerIndex": 2,
+                  "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1266,
+                  "duration": 1445,
                   "errors": [],
                   "stdout": [
                     {
@@ -149,7 +211,7 @@
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-08-08T12:28:01.802Z",
+                  "startTime": "2025-08-08T14:19:20.313Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -167,9 +229,9 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-08T12:27:52.669Z",
-    "duration": 11083.220000000001,
-    "expected": 2,
+    "startTime": "2025-08-08T14:19:06.351Z",
+    "duration": 35198.886,
+    "expected": 3,
     "skipped": 0,
     "unexpected": 0,
     "flaky": 0
