@@ -29,9 +29,7 @@ Saving the storage state (to avoid logging in repeatedly).
 Verifying a successful API response using the function waitForSuccessFulResponse.
 
 🔍 Understanding waitForSuccessFulResponse
-ts
-Copy
-Edit
+<pre lang="markdown"> ```ts
 export async function waitForSuccessFulResponse(page: Page): Promise<Response> {
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => reject(new Error("Timeout waiting for dashboard response")), 15000);
@@ -43,6 +41,7 @@ export async function waitForSuccessFulResponse(page: Page): Promise<Response> {
     });
   });
 }
+``` </pre>
 ✅ What This Function Does:
 Listens for a successful HTTP response on the /dashboard/index endpoint.
 
