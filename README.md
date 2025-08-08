@@ -72,4 +72,13 @@ We use this path (e.g., /dashboard/index) in our code to validate successful log
 ![alt text](<Screenshot 2025-08-08 at 6.17.22 PM.png>)
 
 ![alt text](image.png)
-       
+
+
+
+# # Exeution Flow : 
+
+1. In Terminal run command npx playwright test --headed
+2. It will go to Playwright.config.ts file.
+3. From there It will go to 'createBasePlaywrightConfig'  
+4. Inside projects we have given dependency setup and we have given the location of auth.setup.ts file as well.
+5. So first it will run the dependency and after that the testcases.
