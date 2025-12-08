@@ -3,7 +3,7 @@
 # # Exeution Flow : 
 
 1. Run tests (e.g. npx playwright test --headed) — Playwright loads playwright.config.ts which calls the `factory` ***`createBasePlaywrightConfig`***.
-✅ Why ***`createBasePlaywrightConfig`*** is called a `Factory`?
+### ✅ Why ***`createBasePlaywrightConfig`*** is called a `Factory`?
   - A `factory` in programming means:
     1. A function or module that creates and returns a configured object for you.
     2. In your case:
@@ -12,7 +12,7 @@
         ```
     3. You are importing a function named ***`createBasePlaywrightConfig`***.
     4. This function creates your final Playwright configuration object. So this pattern is called a      **`Config Factory`**.
-✅ Why ***`createBasePlaywrightConfig`*** is a `Factory`
+### ✅ Why ***`createBasePlaywrightConfig`*** is a `Factory`
   - A typical `factory` function:
     1. Accepts some input parameters.
     2. Applies logic.
