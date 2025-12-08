@@ -9,11 +9,11 @@ interface CreateBasePlaywrightConfigOptions {
 }
 
 export function createBasePlaywrightConfig({ baseURLMap }: CreateBasePlaywrightConfigOptions) {
-    const environment = (process.env.ENV as EnvName) || 'local';
+    const environment = ((process.env.ENV as EnvName) || 'local');
     const baseURL = baseURLMap[environment];
 
     if (!baseURL) {
-        throw new Error(`Missing baseURL for enviornment "${environment}"`);
+        throw new Error(`Missing baseURL for environment "${environment}"`);
     }
 
     const outputDir = path.resolve('distReports/.playwright/reports');
