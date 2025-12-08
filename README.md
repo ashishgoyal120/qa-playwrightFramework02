@@ -2,18 +2,18 @@
 
 # # Exeution Flow : 
 
-1. Run tests (e.g. npx playwright test --headed) — Playwright loads playwright.config.ts which calls the factory ***`createBasePlaywrightConfig`***.
-✅ Why ***`createBasePlaywrightConfig`*** is called a “Factory”?
-  - A factory in programming means:
+1. Run tests (e.g. npx playwright test --headed) — Playwright loads playwright.config.ts which calls the `factory` ***`createBasePlaywrightConfig`***.
+✅ Why ***`createBasePlaywrightConfig`*** is called a `Factory`?
+  - A `factory` in programming means:
     1. A function or module that creates and returns a configured object for you.
     2. In your case:
         ```bash
         import { createBasePlaywrightConfig } from "./utils/src/playwright.base.config";
         ```
-    3. You are importing a function named createBasePlaywrightConfig.
-    4. This function creates your final Playwright configuration object. So this pattern is called a Config Factory.
-✅ Why createBasePlaywrightConfig is a Factory
-  - A typical factory function:
+    3. You are importing a function named ***`createBasePlaywrightConfig`***.
+    4. This function creates your final Playwright configuration object. So this pattern is called a      **`Config Factory`**.
+✅ Why ***`createBasePlaywrightConfig`*** is a `Factory`
+  - A typical `factory` function:
     1. Accepts some input parameters.
     2. Applies logic.
     3. Returns a fully prepared object.
@@ -27,14 +27,15 @@
           }
         });
           ```
-    5. You pass parameters → it builds the final config → Playwright uses it. This matches the Factory Pattern.
-❌ The import line itself is NOT the factory
+    5. You pass parameters → it builds the final config → Playwright uses it. This matches the `Factory Pattern`.
+❌ The import line itself is NOT the `factory`
 - The import line:
-  1. import { createBasePlaywrightConfig } from "./utils/src/playwright.base.config";
-  2. It is simply importing the factory function.
-  3. The factory is the actual function createBasePlaywrightConfig.
+  ```bash
+    import { createBasePlaywrightConfig } from "./utils/src/playwright.base.config";
+  ```
+  It is simply importing the `factory` function. The `factory` is the actual function ***`createBasePlaywrightConfig`***.
 --------------------------------------------------------------------------------------------------------
-2. ***createBasePlaywrightConfig*** reads the environment (from .env.local), resolves the baseURL from the provided map, sets reporters/output directories, and defines projects (e.g. setup and chromium). *See the projects and storageState usage in playwright.base.config.ts.*
+2. ***`createBasePlaywrightConfig`*** reads the environment (from .env.local), resolves the baseURL from the provided map, sets reporters/output directories, and defines projects (e.g. setup and chromium). *See the projects and storageState usage in playwright.base.config.ts.*
 --------------------------------------------------------------------------------------------------------
 3. The setup project runs the setup test file auth.setup.ts. That file:
   - Loads credentials via getCredentialsForApp (reads from .env.local).
