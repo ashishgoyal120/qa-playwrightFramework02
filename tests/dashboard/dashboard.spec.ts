@@ -10,6 +10,6 @@ test('AN-001 verify', async ({ appPage }) => {
         description: 'JIRA URL of Testcase'
     });
     await test.step('Verify title', async () => {
-        appPage.dashboardPage.verifyTitle();
+        await appPage.dashboardPage.verifyTitle();
     })
 });

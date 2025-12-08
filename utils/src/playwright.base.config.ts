@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 import * as path from 'path';
 
 
-type EnvName = 'local' | 'stage';
+type EnvName = 'qa' | 'local' | 'stage';
 
 interface CreateBasePlaywrightConfigOptions {
     baseURLMap: Record<EnvName, string>;
@@ -42,11 +42,12 @@ export function createBasePlaywrightConfig({ baseURLMap }: CreateBasePlaywrightC
                 'html',
                 {
                     outputFolder: path.join(outputDir, 'playwright-report'),
-                    open: 'always'
+                    open: 'never'
 
                 }
             ]
         ],
+        workers: 2,
         // ...(environment !== 'stage' ? {} : {}),
         projects: [
             {

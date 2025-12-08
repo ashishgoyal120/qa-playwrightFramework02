@@ -25,7 +25,7 @@
         "html",
         {
           "outputFolder": "/Users/apple/Documents/Projects/Playwright/playwrightFramework/distReports/.playwright/reports/playwright-report",
-          "open": "always"
+          "open": "never"
         }
       ]
     ],
@@ -72,7 +72,7 @@
     "updateSnapshots": "missing",
     "updateSourceMethod": "patch",
     "version": "1.54.2",
-    "workers": 4,
+    "workers": 2,
     "webServer": null
   },
   "suites": [
@@ -98,12 +98,12 @@
                   "workerIndex": 0,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 11844,
+                  "duration": 3358,
                   "errors": [],
                   "stdout": [],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-08-08T14:19:07.071Z",
+                  "startTime": "2025-12-08T13:12:09.745Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -145,7 +145,7 @@
                   "workerIndex": 1,
                   "parallelIndex": 0,
                   "status": "passed",
-                  "duration": 20495,
+                  "duration": 9576,
                   "errors": [],
                   "stdout": [
                     {
@@ -160,7 +160,7 @@
                       "duration": 2
                     }
                   ],
-                  "startTime": "2025-08-08T14:19:20.314Z",
+                  "startTime": "2025-12-08T13:12:15.055Z",
                   "annotations": [
                     {
                       "type": "Test case Id :",
@@ -202,7 +202,7 @@
                   "workerIndex": 2,
                   "parallelIndex": 1,
                   "status": "passed",
-                  "duration": 1445,
+                  "duration": 1600,
                   "errors": [],
                   "stdout": [
                     {
@@ -211,7 +211,7 @@
                   ],
                   "stderr": [],
                   "retry": 0,
-                  "startTime": "2025-08-08T14:19:20.313Z",
+                  "startTime": "2025-12-08T13:12:15.054Z",
                   "annotations": [],
                   "attachments": []
                 }
@@ -229,8 +229,8 @@
   ],
   "errors": [],
   "stats": {
-    "startTime": "2025-08-08T14:19:06.351Z",
-    "duration": 35198.886,
+    "startTime": "2025-12-08T13:12:08.977Z",
+    "duration": 16381.809,
     "expected": 3,
     "skipped": 0,
     "unexpected": 0,

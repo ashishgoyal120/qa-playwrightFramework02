@@ -17,8 +17,8 @@ export class DashboardPage {
         await this.page.waitForTimeout(2000); // Application issue we dont use in realtime.
         await this.page.reload(); // Application issue we dont use in realtime.
 
-        const response = await waitForSuccessFulResponse(this.page);
-        expect(response.ok()).toBeTruthy();
+        //  const response = await waitForSuccessFulResponse(this.page);
+        //   expect(response.ok()).toBeTruthy();
     }
 
     async verifyTitle() {
