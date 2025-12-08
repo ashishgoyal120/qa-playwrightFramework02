@@ -98,5 +98,5 @@ HTML report: index.html.
 Per-run artifacts go to the outputDir configured in createBasePlaywrightConfig.
 Summary flow (quick):
 
-***Final flow : ***
+***Final flow : ***<br>
 Config factory -> run setup -> save storage state -> run chromium tests using saved state -> page objects & fixtures drive actions -> reporters write results to distReports. Files: playwright.config.ts, auth.setup.ts, storageState.json, fixture.ts, appPages.ts, dashboard.page.ts, dashboard.spec.ts, results.json, index.html.
