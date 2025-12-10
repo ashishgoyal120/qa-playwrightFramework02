@@ -232,16 +232,16 @@ jobs:
         run: |
           echo "Failures: ${{ needs.generate-message.outputs.failures }}"
 
-  notify-teams:
-    name: Notify Teams
-    if: always()
-    needs: [e2e, generate-message]
-    uses: ./.github/workflows/notify-teams.yml
-    with:
-      message: ${{ needs.generate-message.outputs.message }}
-    secrets:
-      TEAMS_BOT_APP_ID: ${{ secrets.TEAMS_BOT_APP_ID }}
-      TEAMS_BOT_APP_SECRET: ${{ secrets.TEAMS_BOT_APP_SECRET }}
-      TEAMS_BOT_ID: 28:${{ secrets.TEAMS_BOT_APP_ID }}
-      TEAMS_CONVERSATION_ID: ${{ secrets.TEAMS_CONVERSATION_ID }}
-      TEAMS_SERVICE_URL: ${{ secrets.TEAMS_SERVICE_URL }}
+  # notify-teams:
+  #   name: Notify Teams
+  #   if: always()
+  #   needs: [e2e, generate-message]
+  #   uses: ./.github/workflows/notify-teams.yml
+  #   with:
+  #     message: ${{ needs.generate-message.outputs.message }}
+  #   secrets:
+  #     TEAMS_BOT_APP_ID: ${{ secrets.TEAMS_BOT_APP_ID }}
+  #     TEAMS_BOT_APP_SECRET: ${{ secrets.TEAMS_BOT_APP_SECRET }}
+  #     TEAMS_BOT_ID: 28:${{ secrets.TEAMS_BOT_APP_ID }}
+  #     TEAMS_CONVERSATION_ID: ${{ secrets.TEAMS_CONVERSATION_ID }}
+  #     TEAMS_SERVICE_URL: ${{ secrets.TEAMS_SERVICE_URL }}
