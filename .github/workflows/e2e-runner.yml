@@ -1,1 +1,247 @@
-df
+
+name: E2E Runner
+on:
+  workflow_call:
+    inputs:
+      environment:
+        required: true
+        type: string
+      run_all:
+        required: false
+        type: boolean
+        default: true
+
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run against'
+        required: true
+        type: choice
+        options:
+          - qa
+          - stage
+      run_all:
+        description: 'Run all tests?'
+        type: boolean
+        default: true
+  # schedule:
+  #   # Run qa Every day at 2am UTC
+  #   - cron: '0 2 * * *'
+
+jobs:
+  e2e:
+    runs-on: ubuntu-latest
+    name: Run E2E (${{ inputs.environment || 'stage' }})
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '24.x'
+
+      - name: Restore cached npm dependencies
+        id: cache-npm
+        uses: actions/cache/restore@v4
+        with:
+          path: node_modules
+          key: npm-dependencies-${{ hashFiles('package-lock.json') }}
+
+      - name: Install dependencies
+        if: ${{ steps.cache-npm.outputs.cache-hit != 'true'}}
+        run: npm ci
+
+      - run: npx playwright install --with-deps
+
+      - name: Run E2E Tests
+        run: |
+          # Default to running all e2e tests for manual runs
+          RUN_ALL="${{ inputs.run_all }}"
+          if [[ -z "$RUN_ALL" ]]; then
+            RUN_ALL=true
+          fi
+          if [[ "$RUN_ALL" == "true" ]]; then
+            echo "Running ALL Playwright tests"
+            npx playwright test --reporter=line,html,json --output=distReports/.playwright/reports/test-results
+          else
+            echo "Running ONLY changed tests (no Nx). Running normal tests."
+            npx playwright test --reporter=line,html,json --output=distReports/.playwright/reports/test-results
+          fi
+
+        env:
+          ENV: ${{ inputs.environment || 'stage' }}
+          CI: true
+          E2E_EMAIL: ${{ secrets.E2E_EMAIL }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+
+      - name: Upload Playwright Report
+        if: ${{ !cancelled() }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-dist
+          path: distReports/.playwright/reports
+
+  publish-reports:
+    name: Publish Reports to GitHub Pages
+    if: always()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout E2E Reports Repo
+        uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-dist
+          path: distReports/.playwright/reports
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+
+      - name: Clone e2e-reports repo
+        env:
+          TOKEN: ${{ secrets.E2E_REPORTS_TOKEN }}
+        run: |
+          git clone https://x-access-token:${TOKEN}@github.com/ashishgoyal120/e2e-reports.git e2e-reports-repo
+          cd e2e-reports-repo
+          git checkout gh-pages
+
+      - name: Copy reports to e2e-reports directory
+        run: |
+          ENVIRONMENT="${{ inputs.environment || 'stage' }}"
+          DATE=$(date +%F)
+          RUN_ID="${{ github.run_id }}"
+          DEST="e2e-reports-repo/${ENVIRONMENT}/${DATE}/${RUN_ID}"
+
+          mkdir -p "$DEST"
+          cp -r distReports/.playwright/reports/* "$DEST/"
+
+      - name: Commit and push reports
+        run: |
+          ENVIRONMENT="${{ inputs.environment || 'stage' }}"
+          DATE=$(date +%F)
+          RUN_ID="${{ github.run_id }}"
+
+          cd e2e-reports-repo
+          git add .
+          git commit -m "E2E reports for $ENVIRONMENT on $DATE ($RUN_ID)" || echo "No changes to commit"
+          git push origin gh-pages
+
+      - name: Prune old reports
+        run: |
+          echo "Pruning old test reports..."
+
+          for ENV in qa stage; do
+            echo "Cleaning $ENV..."
+            cd "e2e-reports-repo/$ENV" || continue
+            # Keep only 3 most recent runs
+            find . -mindepth 2 -maxdepth 2 -type d | sort -r | tail -n +4 | while read -r dir; do
+              echo "Removing $dir"
+              rm -rf "$dir"
+            done
+            cd -
+          done
+
+          # echo "Cleaning prod1-az-usw3..."
+          # cd "e2e-reports-repo/prod1-az-usw3" || exit 0
+          # # Remove anything older than 14 days
+          # find . -mindepth 2 -maxdepth 2 -type d -mtime +14 -exec rm -rf {} +
+          # # Keep only 5 most recent
+          # find . -mindepth 2 -maxdepth 2 -type d | sort -r | tail -n +6 | while read -r dir; do
+          #   echo "Removing $dir"
+          #   rm -rf "$dir"
+          # done
+          # cd -
+
+      - name: Commit and push pruning changes
+        run: |
+          cd e2e-reports-repo
+          git add .
+          git commit -m "Prune old E2E reports" || echo "Nothing pruned"
+          git push origin gh-pages
+
+  generate-message:
+    name: Generate Summary Message
+    if: always()
+    needs: [e2e, publish-reports]
+    runs-on: ubuntu-latest
+    outputs:
+      message: ${{ steps.summary.outputs.message }}
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: playwright-dist
+          path: distReports/.playwright/reports
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: '24.x'
+
+      - uses: hmarr/debug-action@v2
+
+      - name: Determine trigger type
+        id: trigger
+        run: |
+
+          if [[ "${{ github.workflow }}" == "Promote environment" ]]; then
+            echo "type=Promotion" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "type=Manual" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "type=Scheduled" >> $GITHUB_OUTPUT
+          else
+            echo "type=Unknown" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Generate Message
+        id: summary
+        run: |
+          node tools/scripts/generate-e2e-summary.js \
+            "${{ inputs.environment || 'stage' }}" \
+            "$(date +%F)" \
+            "${{ github.run_id }}" \
+            "${{ steps.trigger.outputs.type }}" > card.json
+
+          echo "message<<EOF" >> $GITHUB_OUTPUT
+          cat card.json >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+
+      - name: Show generated message
+        run: cat card.json
+
+      - name: Check for Failures
+        id: check-failures
+        run: |
+          node tools/scripts/check-e2e-failures.js > failure_flag.txt
+          echo "failures=$(cat failure_flag.txt)" >> $GITHUB_OUTPUT
+
+  log-failure-flag:
+    name: Log Failures Output
+    needs: [generate-message]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Log failures value from generate-message
+        run: |
+          echo "Failures: ${{ needs.generate-message.outputs.failures }}"
+
+  notify-teams:
+    name: Notify Teams
+    if: always()
+    needs: [e2e, generate-message]
+    uses: ./.github/workflows/notify-teams.yml
+    with:
+      message: ${{ needs.generate-message.outputs.message }}
+    secrets:
+      TEAMS_BOT_APP_ID: ${{ secrets.TEAMS_BOT_APP_ID }}
+      TEAMS_BOT_APP_SECRET: ${{ secrets.TEAMS_BOT_APP_SECRET }}
+      TEAMS_BOT_ID: 28:${{ secrets.TEAMS_BOT_APP_ID }}
+      TEAMS_CONVERSATION_ID: ${{ secrets.TEAMS_CONVERSATION_ID }}
+      TEAMS_SERVICE_URL: ${{ secrets.TEAMS_SERVICE_URL }}
